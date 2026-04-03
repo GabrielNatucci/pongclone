@@ -14,6 +14,18 @@ pub const Player = struct {
             .y = y,
         };
     }
+    
+    pub fn tick(self: *Player) !void {
+        const keyboardState = c.SDL_GetKeyboardState(null);
+
+        if (keyboardState[c.SDL_SCANCODE_W] != 0) {
+            self.y -= 5;
+        }
+
+        if (keyboardState[c.SDL_SCANCODE_S] != 0) {
+            self.y += 5;
+        }
+    }
 
     pub fn render(self: Player, renderer: *c.SDL_Renderer) void {
         _ = c.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

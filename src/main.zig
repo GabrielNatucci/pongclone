@@ -39,6 +39,7 @@ pub fn main() !void {
         _ = c.SDL_RenderClear(renderer);
         _ = c.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
+        try player.tick();
         player.render(renderer.?);
 
         c.SDL_RenderPresent(renderer);
