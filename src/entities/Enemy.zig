@@ -4,37 +4,30 @@ const c = @import("../c.zig").c;
 const HEIGHT: c_int = 100;
 const WIDTH: c_int = 20;
 
-pub const Player = struct {
+pub const Enemy = struct {
     x: c_int,
     y: c_int,
 
-    pub fn init(x: c_int, y: c_int) !Player {
+    pub fn init(x: c_int, y: c_int) !Enemy {
         return .{
             .x = x,
             .y = y,
         };
     }
-    
-    pub fn tick(self: *Player, delta: c_int) !void {
-        const keyboardState = c.SDL_GetKeyboardState(null);
 
-        if (keyboardState[c.SDL_SCANCODE_W] != 0) {
-            self.y -= 1 * delta;
-        }
-
-        if (keyboardState[c.SDL_SCANCODE_S] != 0) {
-            self.y += 1 * delta;
-        }
+    pub fn tick(self: *Enemy, delta: c_int) !void {
+        _ = self;
+        _ = delta;
     }
 
-    pub fn render(self: Player, renderer: *c.SDL_Renderer) void {
+    pub fn render(self: Enemy, renderer: *c.SDL_Renderer) void {
         _ = c.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
         var rect: c.SDL_Rect = .{ .x = self.x - @divTrunc(WIDTH, 2), .y = self.y - @divTrunc(HEIGHT, 2), .w = WIDTH, .h = HEIGHT };
         _ = c.SDL_RenderFillRect(renderer, &rect);
     }
 
-    pub fn deinit(self: *Player) !void {
+    pub fn deinit(self: *Enemy) !void {
         _ = self;
     }
 };
