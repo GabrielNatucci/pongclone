@@ -1,6 +1,6 @@
 const c = @import("../c.zig").c;
 const SCREEN_WIDTH = @import("../main.zig").WIDTH;
-const SCREEN_HEIGTH = @import("../main.zig").HEIGTH;
+const SCREEN_HEIGTH = @import("../main.zig").HEIGHT;
 
 const std = @import("std");
 const HEIGHT: c_int = 100;
