@@ -1,7 +1,7 @@
 const std = @import("std");
-const c = @cImport({
-    @cInclude("SDL2/SDL.h");
-});
+const c = @import("c.zig").c;
+
+const Player = @import("entities/Player.zig").Player;
 
 pub fn main() !void {
     if (c.SDL_Init(c.SDL_INIT_VIDEO) != 0) {
@@ -24,6 +24,8 @@ pub fn main() !void {
 
     var isRunning = true;
 
+    var player = try Player.init(40, 720/2);
+
     while (isRunning) {
         var event: c.SDL_Event = undefined;
         while (c.SDL_PollEvent(&event) != 0) {
@@ -35,9 +37,12 @@ pub fn main() !void {
 
         _ = c.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         _ = c.SDL_RenderClear(renderer);
-
         _ = c.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+        player.render(renderer.?);
 
         c.SDL_RenderPresent(renderer);
     }
+
+    try player.deinit();
 }
