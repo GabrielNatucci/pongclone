@@ -1,8 +1,8 @@
 const std = @import("std");
 const c = @import("c.zig").c;
 
-const WIDTH: c_int = 1280;
-const HEIGTH: c_int = 720;
+pub const WIDTH: c_int = 1280;
+pub const HEIGHT: c_int = 720;
 
 const Player = @import("entities/Player.zig").Player;
 const Enemy = @import("entities/Enemy.zig").Enemy;
@@ -14,7 +14,7 @@ pub fn main() !void {
     }
     defer c.SDL_Quit();
 
-    const window = c.SDL_CreateWindow("My pong game", c.SDL_WINDOWPOS_CENTERED, c.SDL_WINDOWPOS_CENTERED, WIDTH, HEIGTH, 0);
+    const window = c.SDL_CreateWindow("My pong game", c.SDL_WINDOWPOS_CENTERED, c.SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
     if (window == null) {
         return;
     }
@@ -25,13 +25,13 @@ pub fn main() !void {
         return;
     }
     defer c.SDL_DestroyRenderer(renderer);
-    _ = c.SDL_RenderSetLogicalSize(renderer, WIDTH, HEIGTH);
+    _ = c.SDL_RenderSetLogicalSize(renderer, WIDTH, HEIGHT);
 
     var isRunning = true;
 
-    var player = try Player.init(40, HEIGTH / 2);
-    var enemy = try Enemy.init(WIDTH - 40, HEIGTH / 2);
-    var ball = try Ball.init(WIDTH / 2, HEIGTH / 2);
+    var player = try Player.init(40, HEIGHT / 2);
+    var enemy = try Enemy.init(WIDTH - 40, HEIGHT / 2);
+    var ball = try Ball.init(WIDTH / 2, HEIGHT / 2);
     var lastTime = c.SDL_GetTicks();
 
     while (isRunning) {
