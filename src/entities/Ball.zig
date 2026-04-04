@@ -8,6 +8,9 @@ const WIDTH: c_int = 10;
 const Player = @import("Player.zig").Player;
 const Enemy = @import("Enemy.zig").Enemy;
 
+const PLAYERS_HEIGHT = @import("Player.zig").PLAYER_HEIGHT;
+const PLAYERS_WIDTH = @import("Player.zig").PLAYER_WIDTH;
+
 pub const Ball = struct {
     x: f32,
     y: f32,
@@ -19,7 +22,7 @@ pub const Ball = struct {
             .x = @floatFromInt(x),
             .y = @floatFromInt(y),
             .speed = 0.5,
-            .angle = 140,
+            .angle = 180,
         };
     }
 
@@ -46,8 +49,18 @@ pub const Ball = struct {
 
         if (player.isHittingPLayer(self.*)) {
             self.angle = 0;
-        } else if(enemy.isHittingPLayer(self.*)) {
+
+            const normalizedBallHeight = self.y - @as(f32, @floatFromInt(player.y));
+            const angleMultiplier = normalizedBallHeight / @as(f32, @floatFromInt(PLAYERS_HEIGHT));
+            const new_angle = angleMultiplier * 120;
+            self.angle = new_angle;
+        } else if (enemy.isHittingEnemy(self.*)) {
             self.angle = 180;
+
+            const normalizedBallHeight = self.y - @as(f32, @floatFromInt(enemy.y));
+            const angleMultiplier = normalizedBallHeight / @as(f32, @floatFromInt(PLAYERS_HEIGHT));
+            const new_angle = 180 - (angleMultiplier * 120);
+            self.angle = new_angle;
         }
     }
 

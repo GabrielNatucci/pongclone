@@ -3,8 +3,8 @@ const SCREEN_WIDTH = @import("../main.zig").WIDTH;
 const SCREEN_HEIGHT = @import("../main.zig").HEIGHT;
 const Ball = @import("Ball.zig").Ball;
 
-const PLAYER_HEIGHT: c_int = 100;
-const PLAYER_WIDTH: c_int = 20;
+pub const PLAYER_HEIGHT: c_int = 100;
+pub const PLAYER_WIDTH: c_int = 20;
 
 pub const Player = struct {
     x: c_int,
