@@ -1,4 +1,3 @@
-
 const c = @import("../c.zig").c;
 const SCREEN_WIDTH = @import("../main.zig").WIDTH;
 const SCREEN_HEIGTH = @import("../main.zig").HEIGHT;
@@ -6,6 +5,8 @@ const SCREEN_HEIGTH = @import("../main.zig").HEIGHT;
 const std = @import("std");
 const HEIGHT: c_int = 10;
 const WIDTH: c_int = 10;
+const Player = @import("Player.zig").Player;
+const Enemy = @import("Enemy.zig").Enemy;
 
 pub const Ball = struct {
     x: f32,
@@ -18,11 +19,11 @@ pub const Ball = struct {
             .x = @floatFromInt(x),
             .y = @floatFromInt(y),
             .speed = 0.5,
-            .angle = 100,
+            .angle = 140,
         };
     }
 
-    pub fn tick(self: *Ball, delta: c_int) !void {
+    pub fn tick(self: *Ball, delta: c_int, player: Player, enemy: Enemy) !void {
         const angle_rad = self.angle * std.math.pi / 180.0;
 
         const svy = @sin(angle_rad) * self.speed;
@@ -41,6 +42,12 @@ pub const Ball = struct {
         if (self.y - half_height < 0) {
             self.y = 2 * half_height - self.y;
             self.angle = 360 - self.angle;
+        }
+
+        if (player.isHittingPLayer(self.*)) {
+            self.angle = 0;
+        } else if(enemy.isHittingPLayer(self.*)) {
+            self.angle = 180;
         }
     }
 

@@ -50,7 +50,8 @@ pub fn main() !void {
         const delta: c_int = @intCast(c.SDL_GetTicks() - lastTime);
         try player.tick(delta);
         try enemy.tick(delta);
-        try ball.tick(delta);
+
+        try ball.tick(delta, player, enemy);
 
         lastTime = c.SDL_GetTicks();
         player.render(renderer.?);
