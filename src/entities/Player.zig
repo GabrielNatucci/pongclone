@@ -5,6 +5,7 @@ const Ball = @import("Ball.zig").Ball;
 
 pub const PLAYER_HEIGHT: c_int = 100;
 pub const PLAYER_WIDTH: c_int = 20;
+pub const SPEED: c_int = 1;
 
 pub const Player = struct {
     x: c_int,
@@ -21,7 +22,7 @@ pub const Player = struct {
         const keyboardState = c.SDL_GetKeyboardState(null);
 
         if (keyboardState[c.SDL_SCANCODE_W] != 0) {
-            self.y -= 1 * delta;
+            self.y -= SPEED * delta;
 
             if (self.y - PLAYER_HEIGHT / 2 < 0) {
                 self.y = PLAYER_HEIGHT / 2;
@@ -29,7 +30,7 @@ pub const Player = struct {
         }
 
         if (keyboardState[c.SDL_SCANCODE_S] != 0) {
-            self.y += 1 * delta;
+            self.y += SPEED * delta;
 
             if (self.y + PLAYER_HEIGHT / 2 > SCREEN_HEIGHT) {
                 self.y = SCREEN_HEIGHT - PLAYER_HEIGHT / 2;

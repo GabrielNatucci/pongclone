@@ -62,6 +62,15 @@ pub const Ball = struct {
             const new_angle = 180 - (angleMultiplier * 120);
             self.angle = new_angle;
         }
+
+        // por algum motivo a direção da bola está ficando com um angulo negativo ou maior do que 360
+        // alguma as operações acima deve estar causando isso, mas zig é dificil de debugar e estou com preguiça de descobrir rs
+        // me perdoa deus.. faz mto tempo que não estudo trigonometria
+        if (self.angle < 0) {
+            self.angle = 360 + self.angle;
+        } else if (self.angle > 360) {
+            self.angle = self.angle - 360;
+        }
     }
 
     pub fn render(self: Ball, renderer: *c.SDL_Renderer) void {

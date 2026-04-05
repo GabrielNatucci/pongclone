@@ -6,28 +6,31 @@ const std = @import("std");
 const c = @import("../c.zig").c;
 pub const HEIGHT: c_int = 100;
 pub const WIDTH: c_int = 20;
+pub const SPEED: c_int = 1;
 
 pub const Enemy = struct {
     x: c_int,
     y: c_int,
+    target: c_int,
 
     pub fn init(x: c_int, y: c_int) !Enemy {
-        return .{
-            .x = x,
-            .y = y,
-        };
+        return .{ .x = x, .y = y, .target = SCREEN_HEIGTH / 2 - HEIGHT / 2 };
     }
 
     pub fn tick(self: *Enemy, delta: c_int, ball: Ball) !void {
-        _ = delta;
-        const angle_ball = ball.angle * std.math.pi / 180.0;
-        const distance = ball.x - @as(f32, @floatFromInt(self.x));
-        const svy = @tan(angle_ball) * distance + ball.y;
+        if ((ball.angle > 270 and ball.angle <= 360) or (ball.angle > 0 and ball.angle < 90)) {
+            const angle_ball = ball.angle * std.math.pi / 180.0;
+            const distance = @as(f32, @floatFromInt(self.x)) - ball.x;
+            const svy = @tan(angle_ball) * distance + ball.y;
 
-        std.debug.print("ball angle: {}\n", .{ball.angle});
-        std.debug.print("TANGENTE: {}\n", .{svy});
+            self.target = @intFromFloat(svy);
 
-        self.y = @intFromFloat(svy);
+            if (self.target > self.y) {
+                self.y += SPEED * delta;
+            } else if (self.target < self.y) {
+                self.y -= SPEED * delta;
+            }
+        }
     }
 
     pub fn render(self: Enemy, renderer: *c.SDL_Renderer) void {
