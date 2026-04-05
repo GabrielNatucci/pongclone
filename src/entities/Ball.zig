@@ -28,39 +28,27 @@ pub const Ball = struct {
 
     pub fn tick(self: *Ball, delta: c_int, player: Player, enemy: Enemy) !void {
         const angle_rad = self.angle * std.math.pi / 180.0;
+        const fdelta = @as(f32, @floatFromInt(delta));
 
-        const svy = @sin(angle_rad) * self.speed;
-        const svx = @cos(angle_rad) * self.speed;
-
-        self.x += svx * @as(f32, @floatFromInt(delta));
-        self.y += svy * @as(f32, @floatFromInt(delta));
+        self.x += @cos(angle_rad) * self.speed * fdelta;
+        self.y += @sin(angle_rad) * self.speed * fdelta;
 
         const half_height = @as(f32, @floatFromInt(HEIGHT)) / 2.0;
 
         if (self.y + half_height > SCREEN_HEIGTH) {
             self.y = 2 * (SCREEN_HEIGTH - half_height) - self.y;
             self.angle = 360 - self.angle;
-        }
-
-        if (self.y - half_height < 0) {
+        } else if (self.y - half_height < 0) {
             self.y = 2 * half_height - self.y;
             self.angle = 360 - self.angle;
         }
 
         if (player.isHittingPLayer(self.*)) {
-            self.angle = 0;
-
-            const normalizedBallHeight = self.y - @as(f32, @floatFromInt(player.y));
-            const angleMultiplier = normalizedBallHeight / @as(f32, @floatFromInt(PLAYERS_HEIGHT));
-            const new_angle = angleMultiplier * 120;
-            self.angle = new_angle;
+            const hit_pos = (self.y - @as(f32, @floatFromInt(player.y))) / @as(f32, @floatFromInt(PLAYERS_HEIGHT));
+            self.angle = hit_pos * 120;
         } else if (enemy.isHittingEnemy(self.*)) {
-            self.angle = 180;
-
-            const normalizedBallHeight = self.y - @as(f32, @floatFromInt(enemy.y));
-            const angleMultiplier = normalizedBallHeight / @as(f32, @floatFromInt(PLAYERS_HEIGHT));
-            const new_angle = 180 - (angleMultiplier * 120);
-            self.angle = new_angle;
+            const hit_pos = (self.y - @as(f32, @floatFromInt(enemy.y))) / @as(f32, @floatFromInt(PLAYERS_HEIGHT));
+            self.angle = 180 - (hit_pos * 120);
         }
 
         // por algum motivo a direção da bola está ficando com um angulo negativo ou maior do que 360

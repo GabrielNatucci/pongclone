@@ -18,7 +18,7 @@ pub const Enemy = struct {
     }
 
     pub fn tick(self: *Enemy, delta: c_int, ball: Ball) !void {
-        if ((ball.angle > 270 and ball.angle <= 360) or (ball.angle > 0 and ball.angle < 90)) {
+        if ((ball.angle > 270 and ball.angle <= 360) or (ball.angle > 0 and ball.angle < 90)) { // se a bola está indo na deiração do inimigo
             const angle_ball = ball.angle * std.math.pi / 180.0;
             const distance = @as(f32, @floatFromInt(self.x)) - ball.x;
             const svy = @tan(angle_ball) * distance + ball.y;
@@ -27,8 +27,16 @@ pub const Enemy = struct {
 
             if (self.target > self.y) {
                 self.y += SPEED * delta;
+
+                if (self.y + HEIGHT / 2 > SCREEN_HEIGTH) {
+                    self.y = SCREEN_HEIGTH - HEIGHT / 2;
+                }
             } else if (self.target < self.y) {
                 self.y -= SPEED * delta;
+
+                if (self.y - HEIGHT / 2 < 0) {
+                    self.y = HEIGHT / 2;
+                }
             }
         }
     }
