@@ -13,9 +13,9 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    // Link SDL2 and libc
     exe.linkLibC();
     exe.linkSystemLibrary("SDL2");
+    exe.linkSystemLibrary("SDL2_ttf");
 
     b.installArtifact(exe);
 

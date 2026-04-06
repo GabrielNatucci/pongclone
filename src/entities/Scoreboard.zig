@@ -22,6 +22,7 @@ pub const Scoreboard = struct {
     pub fn tick(self: *Scoreboard, allocator: std.mem.Allocator) !void {
         _ = allocator;
         if (self.hasUpdated) {
+            self.hasUpdated = false;
         }
     }
 

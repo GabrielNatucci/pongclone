@@ -11,18 +11,27 @@ const Scoreboard = @import("entities/Scoreboard.zig").Scoreboard;
 
 pub fn main() !void {
     if (c.SDL_Init(c.SDL_INIT_VIDEO) != 0) {
+        std.debug.print("Erro ao inicalizar SDL -> {s}\n", .{c.SDL_GetError()});
         return;
     }
     defer c.SDL_Quit();
 
+    if (c.TTF_Init() < 0) {
+        std.debug.print("Erro ao inicalizar SDL_ttf -> {s}\n", .{c.TTF_GetError()});
+        return;
+    }
+    defer c.TTF_Quit();
+
     const window = c.SDL_CreateWindow("My pong game", c.SDL_WINDOWPOS_CENTERED, c.SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
     if (window == null) {
+        std.debug.print("Erro ao inicalizar a janela do SDL -> {s}\n", .{c.SDL_GetError()});
         return;
     }
     defer c.SDL_DestroyWindow(window.?);
 
     const renderer = c.SDL_CreateRenderer(window, -1, c.SDL_RENDERER_ACCELERATED | c.SDL_RENDERER_PRESENTVSYNC);
     if (renderer == null) {
+        std.debug.print("Erro ao inicalizar a renderer do SDL -> {s}\n", .{c.SDL_GetError()});
         return;
     }
     defer c.SDL_DestroyRenderer(renderer);
