@@ -28,6 +28,10 @@ pub fn main() !void {
     defer c.SDL_DestroyRenderer(renderer);
     _ = c.SDL_RenderSetLogicalSize(renderer, WIDTH, HEIGHT);
 
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
     var isRunning = true;
 
     var player = try Player.init(40, HEIGHT / 2);
@@ -56,7 +60,7 @@ pub fn main() !void {
         try player.tick(delta);
         try enemy.tick(delta, ball);
         _ = try ball.tick(delta, player, enemy);
-        try scoreboard.tick();
+        try scoreboard.tick(allocator);
 
         lastTime = c.SDL_GetTicks();
         player.render(renderer.?);
