@@ -1,6 +1,7 @@
 const c = @import("../c.zig").c;
 const SCREEN_WIDTH = @import("../main.zig").WIDTH;
 const SCREEN_HEIGTH = @import("../main.zig").HEIGHT;
+const whowins = @import("../constants/Enums.zig").whowins;
 
 const std = @import("std");
 const HEIGHT: c_int = 10;
@@ -26,7 +27,7 @@ pub const Ball = struct {
         };
     }
 
-    pub fn tick(self: *Ball, delta: c_int, player: Player, enemy: Enemy) !void {
+    pub fn tick(self: *Ball, delta: c_int, player: Player, enemy: Enemy) !whowins {
         const angle_rad = self.angle * std.math.pi / 180.0;
         const fdelta = @as(f32, @floatFromInt(delta));
 
@@ -53,12 +54,20 @@ pub const Ball = struct {
 
         // por algum motivo a direção da bola está ficando com um angulo negativo ou maior do que 360
         // alguma as operações acima deve estar causando isso, mas zig é dificil de debugar e estou com preguiça de descobrir rs
-        // me perdoa deus.. faz mto tempo que não estudo trigonometria
+        // me perdoai deus por mais uma gambiarra.. faz mto tempo que não estudo trigonometria
         if (self.angle < 0) {
             self.angle = 360 + self.angle;
         } else if (self.angle > 360) {
             self.angle = self.angle - 360;
         }
+
+        if ((self.x - WIDTH / 2) > SCREEN_WIDTH) {
+            return whowins.PLAYER;
+        } else if (self.x - WIDTH / 2 < 0) {
+            return whowins.ENEMY;
+        }
+
+        return whowins.NOBODY;
     }
 
     pub fn render(self: Ball, renderer: *c.SDL_Renderer) void {

@@ -7,6 +7,7 @@ pub const HEIGHT: c_int = 720;
 const Player = @import("entities/Player.zig").Player;
 const Enemy = @import("entities/Enemy.zig").Enemy;
 const Ball = @import("entities/Ball.zig").Ball;
+const Scoreboard = @import("entities/Scoreboard.zig").Scoreboard;
 
 pub fn main() !void {
     if (c.SDL_Init(c.SDL_INIT_VIDEO) != 0) {
@@ -32,6 +33,8 @@ pub fn main() !void {
     var player = try Player.init(40, HEIGHT / 2);
     var enemy = try Enemy.init(WIDTH - 40, HEIGHT / 2);
     var ball = try Ball.init(WIDTH / 2, HEIGHT / 2);
+    var scoreboard = Scoreboard.init();
+
     var lastTime = c.SDL_GetTicks();
     var frames: u32 = 0;
     var lastFpsTime = c.SDL_GetTicks();
@@ -52,12 +55,14 @@ pub fn main() !void {
         const delta: c_int = @intCast(c.SDL_GetTicks() - lastTime);
         try player.tick(delta);
         try enemy.tick(delta, ball);
-        try ball.tick(delta, player, enemy);
+        _ = try ball.tick(delta, player, enemy);
+        try scoreboard.tick();
 
         lastTime = c.SDL_GetTicks();
         player.render(renderer.?);
         enemy.render(renderer.?);
         ball.render(renderer.?);
+        try scoreboard.render(renderer.?);
 
         c.SDL_RenderPresent(renderer);
 
