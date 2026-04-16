@@ -43,7 +43,7 @@ pub const Scoreboard = struct {
     }
 
     pub fn tick(self: *Scoreboard, wins: whowins) !void {
-        if (wins == whowins.NOBODY) {
+        if (wins == whowins.NOBODY and self.hasUpdated == false) {
             return;
         }
 

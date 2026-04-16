@@ -61,6 +61,7 @@ pub const Ball = struct {
             self.angle = self.angle - 360;
         }
 
+        // decidindo quem ganha
         var whoWins = whowins.NOBODY;
 
         if ((self.x - WIDTH / 2) > SCREEN_WIDTH) {
