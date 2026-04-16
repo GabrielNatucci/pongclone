@@ -61,13 +61,20 @@ pub const Ball = struct {
             self.angle = self.angle - 360;
         }
 
+        var whoWins = whowins.NOBODY;
+
         if ((self.x - WIDTH / 2) > SCREEN_WIDTH) {
-            return whowins.PLAYER;
+            whoWins = whowins.PLAYER;
         } else if (self.x - WIDTH / 2 < 0) {
-            return whowins.ENEMY;
+            whoWins = whowins.ENEMY;
         }
 
-        return whowins.NOBODY;
+        if (whoWins != whowins.NOBODY) {
+            self.x = SCREEN_WIDTH / 2;
+            self.y = SCREEN_HEIGTH / 2;
+        }
+
+        return whoWins;
     }
 
     pub fn render(self: Ball, renderer: *c.SDL_Renderer) void {
