@@ -51,7 +51,6 @@ pub const Scoreboard = struct {
             self.addEnemyPoint();
             self.hasUpdated = true;
         }
-
         if (wins == whowins.PLAYER) {
             self.addPlayerPoint();
             self.hasUpdated = true;
@@ -78,7 +77,9 @@ pub const Scoreboard = struct {
     }
 
     pub fn render(self: Scoreboard) !void {
-        var rect: c.SDL_Rect = .{ .x = 0, .y = 0, .w = self.width, .h = self.height };
+        const x = (SCREEN_WIDTH / 2) - (@divTrunc(self.width, 2));
+
+        var rect: c.SDL_Rect = .{ .x = x, .y = 0, .w = self.width, .h = self.height };
         _ = c.SDL_RenderCopy(self.renderer, self.textTexture, null, &rect);
     }
 

@@ -66,7 +66,8 @@ pub const Ball = struct {
 
         if ((self.x - WIDTH / 2) > SCREEN_WIDTH) {
             whoWins = whowins.PLAYER;
-        } else if (self.x - WIDTH / 2 < 0) {
+        } 
+        if (self.x - WIDTH / 2 < 0) {
             whoWins = whowins.ENEMY;
         }
 
