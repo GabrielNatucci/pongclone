@@ -12,6 +12,9 @@ const Enemy = @import("Enemy.zig").Enemy;
 const PLAYERS_HEIGHT = @import("Player.zig").PLAYER_HEIGHT;
 const PLAYERS_WIDTH = @import("Player.zig").PLAYER_WIDTH;
 
+const NORMAL_SPEED: f32 = 0.5;
+const SPEED_INCREASE: f32 = 1.1;
+
 pub const Ball = struct {
     x: f32,
     y: f32,
@@ -22,7 +25,7 @@ pub const Ball = struct {
         return .{
             .x = @floatFromInt(x),
             .y = @floatFromInt(y),
-            .speed = 0.5,
+            .speed = NORMAL_SPEED,
             .angle = 180,
         };
     }
@@ -47,9 +50,11 @@ pub const Ball = struct {
         if (player.isHittingPLayer(self.*)) {
             const hit_pos = (self.y - @as(f32, @floatFromInt(player.y))) / @as(f32, @floatFromInt(PLAYERS_HEIGHT));
             self.angle = hit_pos * 120;
+            self.speed *= SPEED_INCREASE;
         } else if (enemy.isHittingEnemy(self.*)) {
             const hit_pos = (self.y - @as(f32, @floatFromInt(enemy.y))) / @as(f32, @floatFromInt(PLAYERS_HEIGHT));
             self.angle = 180 - (hit_pos * 120);
+            self.speed *= SPEED_INCREASE;
         }
 
         // por algum motivo a direção da bola está ficando com um angulo negativo ou maior do que 360
@@ -66,7 +71,7 @@ pub const Ball = struct {
 
         if ((self.x - WIDTH / 2) > SCREEN_WIDTH) {
             whoWins = whowins.PLAYER;
-        } 
+        }
         if (self.x - WIDTH / 2 < 0) {
             whoWins = whowins.ENEMY;
         }
@@ -74,6 +79,7 @@ pub const Ball = struct {
         if (whoWins != whowins.NOBODY) {
             self.x = SCREEN_WIDTH / 2;
             self.y = SCREEN_HEIGTH / 2;
+            self.speed = NORMAL_SPEED;
         }
 
         return whoWins;

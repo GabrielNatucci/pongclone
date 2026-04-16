@@ -6,7 +6,7 @@ const std = @import("std");
 const c = @import("../c.zig").c;
 pub const HEIGHT: c_int = 100;
 pub const WIDTH: c_int = 20;
-pub const SPEED: c_int = 1;
+pub const SPEED: c_int = 2;
 
 pub const Enemy = struct {
     x: c_int,
@@ -18,7 +18,7 @@ pub const Enemy = struct {
     }
 
     pub fn tick(self: *Enemy, delta: c_int, ball: Ball) !void {
-        if ((ball.angle > 270 and ball.angle <= 360) or (ball.angle > 0 and ball.angle < 90)) { // se a bola está indo na deiração do inimigo
+        if ((ball.angle > 270 and ball.angle <= 360) or (ball.angle > 0 and ball.angle < 90)) { // se a bola está indo na direção do inimigo
             const angle_ball = ball.angle * std.math.pi / 180.0;
             const distance = @as(f32, @floatFromInt(self.x)) - ball.x;
             const svy = @tan(angle_ball) * distance + ball.y;
