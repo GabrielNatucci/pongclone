@@ -46,7 +46,7 @@ pub fn main() !void {
     var player = try Player.init(40, HEIGHT / 2);
     var enemy = try Enemy.init(WIDTH - 40, HEIGHT / 2);
     var ball = try Ball.init(WIDTH / 2, HEIGHT / 2);
-    var scoreboard = Scoreboard.init();
+    var scoreboard = try Scoreboard.init(allocator, renderer.?);
 
     var lastTime = c.SDL_GetTicks();
     var frames: u32 = 0;
@@ -68,14 +68,14 @@ pub fn main() !void {
         const delta: c_int = @intCast(c.SDL_GetTicks() - lastTime);
         try player.tick(delta);
         try enemy.tick(delta, ball);
-        _ = try ball.tick(delta, player, enemy);
-        try scoreboard.tick(allocator);
+        const hasWinCondition = ball.tick(delta, player, enemy);
+        try scoreboard.tick(hasWinCondition);
 
         lastTime = c.SDL_GetTicks();
         player.render(renderer.?);
         enemy.render(renderer.?);
         ball.render(renderer.?);
-        try scoreboard.render(renderer.?);
+        try scoreboard.render();
 
         c.SDL_RenderPresent(renderer);
 
@@ -90,4 +90,5 @@ pub fn main() !void {
     try player.deinit();
     try enemy.deinit();
     try ball.deinit();
+    scoreboard.deinit();
 }

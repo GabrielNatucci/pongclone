@@ -27,7 +27,7 @@ pub const Ball = struct {
         };
     }
 
-    pub fn tick(self: *Ball, delta: c_int, player: Player, enemy: Enemy) whowins {
+    pub fn tick(self: *Ball, delta: c_int, player: Player, enemy: Enemy) !whowins {
         const angle_rad = self.angle * std.math.pi / 180.0;
         const fdelta = @as(f32, @floatFromInt(delta));
 
@@ -83,9 +83,9 @@ pub const Ball = struct {
     }
 
     pub fn resetPos(self: *Ball) void {
-        self.x = SCREEN_WIDTH / 2;
-        self.y = SCREEN_HEIGTH / 2;
-    }
+
+};
+
 
     pub fn deinit(self: *Ball) !void {
         _ = self;
