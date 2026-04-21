@@ -20,6 +20,8 @@ pub const Ball = struct {
     y: f32,
     speed: f32,
     angle: f32,
+    hasToBeFozen: bool,
+    timeSinceFrozen: c_int,
 
     pub fn init(x: c_int, y: c_int) !Ball {
         return .{
@@ -27,10 +29,20 @@ pub const Ball = struct {
             .y = @floatFromInt(y),
             .speed = NORMAL_SPEED,
             .angle = 180,
+            .hasToBeFozen = true,
+            .timeSinceFrozen = 0,
         };
     }
 
     pub fn tick(self: *Ball, delta: c_int, player: Player, enemy: Enemy) whowins {
+        if (self.hasToBeFozen == true and self.timeSinceFrozen < 1000) {
+            self.timeSinceFrozen += delta;
+            return whowins.NOBODY;
+        } else {
+            self.hasToBeFozen = false;
+            self.timeSinceFrozen = 0;
+        }
+        
         const angle_rad = self.angle * std.math.pi / 180.0;
         const fdelta = @as(f32, @floatFromInt(delta));
 
@@ -80,6 +92,7 @@ pub const Ball = struct {
             self.x = SCREEN_WIDTH / 2;
             self.y = SCREEN_HEIGTH / 2;
             self.speed = NORMAL_SPEED;
+            self.hasToBeFozen = true;
         }
 
         return whoWins;
